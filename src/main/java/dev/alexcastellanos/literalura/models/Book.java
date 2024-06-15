@@ -3,6 +3,7 @@ package dev.alexcastellanos.literalura.models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -14,7 +15,11 @@ public class Book {
     private Long Id;
     @Column(unique = true)
     private String title;
-    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "book_author",
+            joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "author_id"))
     private List<Author> authors;
     private List<String> languages;
     private Long download_count;
@@ -63,6 +68,7 @@ public class Book {
 
     @Override
     public String toString() {
-        return this.title;
+        return this.title + " - " + authors.get(0).getName();
     }
+
 }

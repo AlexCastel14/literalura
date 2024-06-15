@@ -1,7 +1,10 @@
 package dev.alexcastellanos.literalura.models;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "authors")
@@ -12,10 +15,10 @@ public class Author {
     private Long Id;
     @Column(unique = true)
     private String name;
-    private Integer birth_year;
-    private Integer death_year;
-    @ManyToOne
-    private Book book;
+    @JsonAlias ("birth_year") private Integer birthyear;
+    @JsonAlias ("death_year") private Integer deathyear;
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "authors",cascade = CascadeType.PERSIST)
+    private List<Book> books;
 
 
 // Getters and Setters
@@ -27,20 +30,20 @@ public class Author {
         Id = id;
     }
 
-    public Integer getBirth_year() {
-        return birth_year;
+    public Integer getBirthyear() {
+        return birthyear;
     }
 
-    public void setBirth_year(Integer birth_year) {
-        this.birth_year = birth_year;
+    public void setBirthyear(Integer birthyear) {
+        this.birthyear = birthyear;
     }
 
-    public Integer getDeath_year() {
-        return death_year;
+    public Integer getDeathyear() {
+        return deathyear;
     }
 
     public void setDeath_year(Integer death_year) {
-        this.death_year = death_year;
+        this.deathyear = deathyear;
     }
 
     public String getName() {
@@ -51,11 +54,16 @@ public class Author {
         this.name = name;
     }
 
-    public Book getBook() {
-        return book;
+    public List<Book> getBooks() {
+        return books;
     }
 
-    public void setBooks(Book book) {
-        this.book = book;
+    public void setBooks(List<Book> books) {
+        this.books = books;
+    }
+
+    @Override
+    public String toString() {
+        return this.name;
     }
 }
